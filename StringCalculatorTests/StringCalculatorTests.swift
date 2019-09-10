@@ -25,4 +25,9 @@ class StringCalculatorTests: XCTestCase {
         let result = sut.add("")
         XCTAssertEqual(result, 0)
     }
+    
+    func test_oneNumberString_returnsNumber() {
+        let result = sut.add("3")
+        XCTAssertEqual(result, 3)
+    }
 }

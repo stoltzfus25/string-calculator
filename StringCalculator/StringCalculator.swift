@@ -9,7 +9,7 @@
 import Foundation
 
 class StringCalculator {
-    func add(_ numbers: String) -> Int {
-        return 0
+    func add(_ numberString: String) -> Int {
+        return Int(numberString) ?? 0
     }
 }
