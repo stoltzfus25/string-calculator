@@ -35,4 +35,9 @@ class StringCalculatorTests: XCTestCase {
         let result = sut.add("2,6")
         XCTAssertEqual(result, 8)
     }
+    
+    func test_twoNumbersSeparatedByNewLineAndComma_returnsSum() {
+        let result = sut.add("2\n3,6")
+        XCTAssertEqual(result, 11)
+    }
 }

@@ -10,7 +10,8 @@ import Foundation
 
 class StringCalculator {
     func add(_ numberString: String) -> Int {
-        let numbers = numberString.components(separatedBy: ",").compactMap { Int($0) }
+        let numberStrings = numberString.components(separatedBy: [",","\n"])
+        let numbers = numberStrings.compactMap { Int($0) }
         return numbers.reduce(0, +)
     }
 }
