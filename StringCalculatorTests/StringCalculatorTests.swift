@@ -11,12 +11,18 @@ import XCTest
 
 class StringCalculatorTests: XCTestCase {
 
+    var sut: StringCalculator!
+    
     override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        sut = StringCalculator()
     }
 
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        sut = nil
     }
-
+    
+    func test_emptyString_returnsZero() {
+        let result = sut.add("")
+        XCTAssertEqual(result, 0)
+    }
 }

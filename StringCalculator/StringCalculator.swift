@@ -7,3 +7,9 @@
 //
 
 import Foundation
+
+class StringCalculator {
+    func add(_ numbers: String) -> Int {
+        return 0
+    }
+}
