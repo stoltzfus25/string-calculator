@@ -30,4 +30,9 @@ class StringCalculatorTests: XCTestCase {
         let result = sut.add("3")
         XCTAssertEqual(result, 3)
     }
+    
+    func test_twoNumbersString_returnsSum() {
+        let result = sut.add("2,6")
+        XCTAssertEqual(result, 8)
+    }
 }
