@@ -40,4 +40,11 @@ class StringCalculatorTests: XCTestCase {
         let result = sut.add("2\n3,6")
         XCTAssertEqual(result, 11)
     }
+    
+    func test_multipleNumbersSeparatedBySpecifiedDelimiter_returnsSum() {
+        var result = sut.add("//;\n1;2")
+        XCTAssertEqual(result, 3)
+        result = sut.add("//;\n2;3")
+        XCTAssertEqual(result, 5)
+    }
 }

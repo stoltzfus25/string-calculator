@@ -10,8 +10,18 @@ import Foundation
 
 class StringCalculator {
     func add(_ numberString: String) -> Int {
-        let numberStrings = numberString.components(separatedBy: [",","\n"])
-        let numbers = numberStrings.compactMap { Int($0) }
-        return numbers.reduce(0, +)
+        if numberString.starts(with: "//") {
+            // custom delimiter
+            let newNumberString = numberString.components(separatedBy: "\n")[1...].reduce("", +)
+            let delimiter = numberString.components(separatedBy: "\n")[0].dropFirst(2)
+            
+            let numberStrings = "\(newNumberString)".components(separatedBy: delimiter)
+            let numbers = numberStrings.compactMap { Int($0) }
+            return numbers.reduce(0, +)
+        } else {
+            let numberStrings = numberString.components(separatedBy: [",","\n"])
+            let numbers = numberStrings.compactMap { Int($0) }
+            return numbers.reduce(0, +)
+        }
     }
 }
