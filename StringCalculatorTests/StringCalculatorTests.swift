@@ -22,29 +22,23 @@ class StringCalculatorTests: XCTestCase {
     }
     
     func test_emptyString_returnsZero() {
-        let result = sut.add("")
-        XCTAssertEqual(result, 0)
+        XCTAssertEqual(sut.add(""), 0)
     }
     
     func test_oneNumberString_returnsNumber() {
-        let result = sut.add("3")
-        XCTAssertEqual(result, 3)
+        XCTAssertEqual(sut.add("3"), 3)
     }
     
     func test_twoNumbersString_returnsSum() {
-        let result = sut.add("2,6")
-        XCTAssertEqual(result, 8)
+        XCTAssertEqual(sut.add("2,6"), 8)
     }
     
     func test_twoNumbersSeparatedByNewLineAndComma_returnsSum() {
-        let result = sut.add("2\n3,6")
-        XCTAssertEqual(result, 11)
+        XCTAssertEqual(sut.add("2\n3,6"), 11)
     }
     
     func test_multipleNumbersSeparatedBySpecifiedDelimiter_returnsSum() {
-        var result = sut.add("//;\n1;2")
-        XCTAssertEqual(result, 3)
-        result = sut.add("//;\n2;3")
-        XCTAssertEqual(result, 5)
+        XCTAssertEqual(sut.add("//;\n1;2"), 3)
+        XCTAssertEqual(sut.add("//'\n3'5"), 8)
     }
 }
