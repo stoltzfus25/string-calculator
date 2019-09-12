@@ -10,18 +10,35 @@ import Foundation
 
 class StringCalculator {
     func add(_ numberString: String) -> Int {
-        if numberString.starts(with: "//") {
-            // custom delimiter
-            let newNumberString = numberString.components(separatedBy: "\n")[1...].reduce("", +)
-            let delimiter = numberString.components(separatedBy: "\n")[0].dropFirst(2)
-            
-            let numberStrings = "\(newNumberString)".components(separatedBy: delimiter)
-            let numbers = numberStrings.compactMap { Int($0) }
-            return numbers.reduce(0, +)
-        } else {
-            let numberStrings = numberString.components(separatedBy: [",","\n"])
-            let numbers = numberStrings.compactMap { Int($0) }
-            return numbers.reduce(0, +)
+        let result = numberStringDelimeterPair(numberString)
+        return add(numberString: result.numberString, delimiter: result.delimiter)
+    }
+    
+    private func numberStringDelimeterPair(_ numberString: String) -> (numberString: String, delimiter: String?) {
+        guard numberString.starts(with: "//"),
+            let splitIndex = numberString.range(of: "\n") else {
+            return (numberString, nil)
         }
+        
+        let delimiterString = String(numberString[..<splitIndex.lowerBound])
+        let delimiter = getDelimiter(delimiterString)
+        let numberString = String(numberString[splitIndex.upperBound...])
+        
+        return (numberString, delimiter)
+    }
+    
+    private func getDelimiter(_ delimiterString: String) -> String? {
+        let delimiter = String(delimiterString.dropFirst(2))
+        return delimiter.isEmpty ? nil : delimiter
+    }
+    
+    private func add(numberString: String, delimiter: String? = nil) -> Int {
+        var numberStrings = numberString.components(separatedBy: [",","\n"])
+        if let delimiter = delimiter {
+            numberStrings = numberString.components(separatedBy: delimiter)
+        }
+        
+        let numbers = numberStrings.compactMap { Int($0) }
+        return numbers.reduce(0, +)
     }
 }
