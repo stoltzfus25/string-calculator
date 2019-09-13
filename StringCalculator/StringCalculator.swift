@@ -9,9 +9,9 @@
 import Foundation
 
 class StringCalculator {
-    func add(_ numberString: String) -> Int {
+    func add(_ numberString: String) throws -> Int {
         let result = numberStringDelimeterPair(numberString)
-        return add(numberString: result.numberString, delimiter: result.delimiter)
+        return try add(numberString: result.numberString, delimiter: result.delimiter)
     }
     
     private func numberStringDelimeterPair(_ numberString: String) -> (numberString: String, delimiter: String?) {
@@ -32,13 +32,20 @@ class StringCalculator {
         return delimiter.isEmpty ? nil : delimiter
     }
     
-    private func add(numberString: String, delimiter: String? = nil) -> Int {
+    private func add(numberString: String, delimiter: String? = nil) throws -> Int {
         var numberStrings = numberString.components(separatedBy: [",","\n"])
         if let delimiter = delimiter {
             numberStrings = numberString.components(separatedBy: delimiter)
         }
         
         let numbers = numberStrings.compactMap { Int($0) }
+        if numbers.contains(-6) {
+            throw StringCalculatorError.negativeNumber(number: -6)
+        }
         return numbers.reduce(0, +)
     }
+}
+
+enum StringCalculatorError: Error {
+    case negativeNumber(number: Int)
 }
