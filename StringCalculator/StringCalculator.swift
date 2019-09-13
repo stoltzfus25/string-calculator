@@ -39,13 +39,14 @@ class StringCalculator {
         }
         
         let numbers = numberStrings.compactMap { Int($0) }
-        if numbers.contains(-6) {
-            throw StringCalculatorError.negativeNumber(number: -6)
+        let negativeNumbers = numbers.filter { abs($0) != $0 }
+        guard negativeNumbers.isEmpty else {
+            throw StringCalculatorError.negativeNumber(numbers: negativeNumbers)
         }
         return numbers.reduce(0, +)
     }
 }
 
 enum StringCalculatorError: Error {
-    case negativeNumber(number: Int)
+    case negativeNumber(numbers: [Int])
 }

@@ -47,7 +47,21 @@ class StringCalculatorTests: XCTestCase {
             guard case StringCalculatorError.negativeNumber(let number) = error else {
                 return XCTFail()
             }
-            XCTAssertEqual(number, -6)
+            XCTAssertEqual(number, [-6])
+        }
+        
+        XCTAssertThrowsError(try sut.add("2\n-3,6"), "must throw error") { error in
+            guard case StringCalculatorError.negativeNumber(let number) = error else {
+                return XCTFail()
+            }
+            XCTAssertEqual(number, [-3])
+        }
+        
+        XCTAssertThrowsError(try sut.add("//;\n-1;-2"), "must throw error") { error in
+            guard case StringCalculatorError.negativeNumber(let number) = error else {
+                return XCTFail()
+            }
+            XCTAssertEqual(number, [-1, -2])
         }
     }
 }
