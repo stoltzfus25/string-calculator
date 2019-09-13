@@ -64,4 +64,14 @@ class StringCalculatorTests: XCTestCase {
             XCTAssertEqual(number, [-1, -2])
         }
     }
+    
+    func test_getCalledCount_returnsCorrectCount() {
+        let _ = try! sut.add("9")
+        XCTAssertEqual(sut.getCalledCount(), 1)
+        
+        let _ = try! sut.add("9")
+        let _ = try! sut.add("9")
+        let _ = try! sut.add("9")
+        XCTAssertEqual(sut.getCalledCount(), 4)
+    }
 }

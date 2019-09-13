@@ -9,9 +9,16 @@
 import Foundation
 
 class StringCalculator {
+    private var callCount: Int = 0
+    
     func add(_ numberString: String) throws -> Int {
+        callCount += 1
         let result = numberStringDelimeterPair(numberString)
         return try add(numberString: result.numberString, delimiter: result.delimiter)
+    }
+    
+    func getCalledCount() -> Int {
+        return callCount
     }
     
     private func numberStringDelimeterPair(_ numberString: String) -> (numberString: String, delimiter: String?) {
