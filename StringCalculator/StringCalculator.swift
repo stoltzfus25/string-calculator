@@ -49,8 +49,8 @@ class StringCalculator {
             numberStrings = numberString.components(separatedBy: delimiter)
         }
         
-        let numbers = numberStrings.compactMap { Int($0) }
-        let negativeNumbers = numbers.filter { abs($0) != $0 }
+        let numbers = numberStrings.compactMap { Int($0) }.filter { $0 <= 1000 }
+        let negativeNumbers = numbers.filter { abs($0) != $0}
         guard negativeNumbers.isEmpty else {
             throw StringCalculatorError.negativeNumber(numbers: negativeNumbers)
         }

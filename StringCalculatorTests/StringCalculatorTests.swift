@@ -87,6 +87,10 @@ class StringCalculatorTests: XCTestCase {
         let _ = try! sut.add("9")
         XCTAssertEqual(addCount, 4)
     }
+    
+    func test_numbersOver1000_ignored() {
+        XCTAssertEqual(try sut.add("2,3,1500"), 5)
+    }
 }
 
 extension StringCalculatorTests: StringCalculatorDelegate {
