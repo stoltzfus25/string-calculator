@@ -91,6 +91,10 @@ class StringCalculatorTests: XCTestCase {
     func test_numbersOver1000_ignored() {
         XCTAssertEqual(try sut.add("2,3,1500"), 5)
     }
+    
+    func test_multipleNumbersSeparatedByAnyDelimiterLength_returnsSum() {
+        XCTAssertEqual(try sut.add("//[***]\n1***2***3"), 6)
+    }
 }
 
 extension StringCalculatorTests: StringCalculatorDelegate {

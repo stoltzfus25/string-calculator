@@ -37,7 +37,12 @@ class StringCalculator {
     }
     
     private func getDelimiter(_ delimiterString: String) -> String? {
-        let delimiter = String(delimiterString.dropFirst(2))
+        let beginOffset = delimiterString.contains("[") ? 3 : 2
+        let endOffset = delimiterString.contains("[") ? -2 : -1
+        let beginIndex = delimiterString.index(delimiterString.startIndex, offsetBy: beginOffset)
+        let endIndex = delimiterString.index(delimiterString.endIndex, offsetBy: endOffset)
+        
+        let delimiter = String(delimiterString[beginIndex...endIndex])
         return delimiter.isEmpty ? nil : delimiter
     }
     
