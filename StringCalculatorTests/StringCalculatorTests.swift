@@ -74,4 +74,23 @@ class StringCalculatorTests: XCTestCase {
         let _ = try! sut.add("9")
         XCTAssertEqual(sut.getCalledCount(), 4)
     }
+    
+    private var addCount = 0
+    func test_addDelegate_getsCalledAfterEveryAddCall() {
+        sut.delegate = self
+        
+        let _ = try! sut.add("9")
+        XCTAssertEqual(addCount, 1)
+        
+        let _ = try! sut.add("9")
+        let _ = try! sut.add("9")
+        let _ = try! sut.add("9")
+        XCTAssertEqual(addCount, 4)
+    }
+}
+
+extension StringCalculatorTests: StringCalculatorDelegate {
+    func addOccurred() {
+        addCount += 1
+    }
 }

@@ -11,6 +11,8 @@ import Foundation
 class StringCalculator {
     private var callCount: Int = 0
     
+    weak var delegate: StringCalculatorDelegate?
+    
     func add(_ numberString: String) throws -> Int {
         callCount += 1
         let result = numberStringDelimeterPair(numberString)
@@ -40,6 +42,8 @@ class StringCalculator {
     }
     
     private func add(numberString: String, delimiter: String? = nil) throws -> Int {
+        delegate?.addOccurred()
+        
         var numberStrings = numberString.components(separatedBy: [",","\n"])
         if let delimiter = delimiter {
             numberStrings = numberString.components(separatedBy: delimiter)
@@ -56,4 +60,8 @@ class StringCalculator {
 
 enum StringCalculatorError: Error {
     case negativeNumber(numbers: [Int])
+}
+
+protocol StringCalculatorDelegate: class {
+    func addOccurred()
 }
