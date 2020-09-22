@@ -8,65 +8,62 @@
 
 import Foundation
 
-class StringCalculator {
-    private var callCount: Int = 0
+public class StringCalculator {
+    private var addCallCount: Int = 0
     
-    weak var delegate: StringCalculatorDelegate?
+    public weak var delegate: StringCalculatorDelegate?
     
-    func add(_ numberString: String) throws -> Int {
-        callCount += 1
-        let result = numberStringDelimeterPair(numberString)
-        return try add(numberString: result.numberString, delimiter: result.delimiter)
-    }
+    public init() { }
     
-    func getCalledCount() -> Int {
-        return callCount
-    }
-    
-    private func numberStringDelimeterPair(_ numberString: String) -> (numberString: String, delimiter: String?) {
-        guard numberString.starts(with: "//"),
-            let splitIndex = numberString.range(of: "\n") else {
-            return (numberString, nil)
+    public func add(_ numbers: String) throws -> Int {
+        let defaultDelimiters = [",", "\n"]
+        let delimiters = defaultDelimiters + getCustomDelimiters(from: numbers)
+        
+        let numbersInt = split(textArray: [numbers], on: delimiters).compactMap { Int($0) }
+        
+        let negativeNumbers = numbersInt.filter({ $0 < 0 })
+        if !negativeNumbers.isEmpty {
+            throw StringCalculatorError.negativeNotAllowed(negativeNumbers)
         }
         
-        let delimiterString = String(numberString[..<splitIndex.lowerBound])
-        let delimiter = getDelimiter(delimiterString)
-        let numberString = String(numberString[splitIndex.upperBound...])
+        let result = numbersInt.filter { $0 <= 1000 }.reduce(0, { $0 + $1 })
         
-        return (numberString, delimiter)
+        addCallCount += 1
+        delegate?.addOccurred(input: numbers, result: result)
+        
+        return result
     }
     
-    private func getDelimiter(_ delimiterString: String) -> String? {
-        let beginOffset = delimiterString.contains("[") ? 3 : 2
-        let endOffset = delimiterString.contains("[") ? -2 : -1
-        let beginIndex = delimiterString.index(delimiterString.startIndex, offsetBy: beginOffset)
-        let endIndex = delimiterString.index(delimiterString.endIndex, offsetBy: endOffset)
-        
-        let delimiter = String(delimiterString[beginIndex...endIndex])
-        return delimiter.isEmpty ? nil : delimiter
+    public func getCallCount() -> Int {
+        addCallCount
     }
     
-    private func add(numberString: String, delimiter: String? = nil) throws -> Int {
-        delegate?.addOccurred()
-        
-        var numberStrings = numberString.components(separatedBy: [",","\n"])
-        if let delimiter = delimiter {
-            numberStrings = numberString.components(separatedBy: delimiter)
+    private func getCustomDelimiters(from text: String) -> [String] {
+        guard text.starts(with: "//"),
+              let delimiterSection = split(textArray: [text], on: ["\n"]).first
+        else {
+            return []
         }
         
-        let numbers = numberStrings.compactMap { Int($0) }.filter { $0 <= 1000 }
-        let negativeNumbers = numbers.filter { abs($0) != $0}
-        guard negativeNumbers.isEmpty else {
-            throw StringCalculatorError.negativeNumber(numbers: negativeNumbers)
+        let delimiterSectionSanitized = delimiterSection.dropFirst(2).trimmingCharacters(in: ["[", "]"])
+        return split(textArray: [delimiterSectionSanitized], on: ["]["])
+    }
+    
+    private func split(textArray: [String], on delimiters: [String]) -> [String] {
+        guard let delimiter = delimiters.first else {
+            return textArray
         }
-        return numbers.reduce(0, +)
+        
+        let newDelimiters = Array(delimiters.dropFirst())
+        let newTextArray = textArray.flatMap { $0.components(separatedBy: delimiter) }
+        return split(textArray: newTextArray, on: newDelimiters)
     }
 }
 
-enum StringCalculatorError: Error {
-    case negativeNumber(numbers: [Int])
+public enum StringCalculatorError: Error, Equatable {
+    case negativeNotAllowed(_ numbers: [Int])
 }
 
-protocol StringCalculatorDelegate: class {
-    func addOccurred()
+public protocol StringCalculatorDelegate: class {
+    func addOccurred(input: String, result: Int)
 }
